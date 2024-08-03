@@ -5,7 +5,7 @@ import { tracer } from './tracing';
 function App() {
   useEffect(() => {
     const span = tracer.startSpan('load_application-admin');
-    span.setAttribute('custom_attribute', 'custom_value');
+    span.setAttribute('frontend', 'feature');
     span.end();
 
     // Send the trace to the backend
@@ -18,7 +18,7 @@ function App() {
         name: 'frontend_load_app',
         attributes: {
           'frontend': 'true',
-          'custom_attribute': 'custom_value',
+          'usage': 'feature',
         },
       }),
     })

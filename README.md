@@ -5,17 +5,17 @@ This app is only purpose of to test the connectivity or test traces in opentelem
 
 steps:
 
-    1) cd backend/
+     cd backend/
     
-    2) npm install
+     npm install
     
-    3) node server.js
+     node server.js
     
-    4) cd ../frontend/
+     cd ../frontend/
     
-    5) npm install
+     npm install
     
-    6) npm start
+     npm start
 
 
 Port settings:

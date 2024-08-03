@@ -17,3 +17,12 @@ steps:
     
     6) npm start
 
+
+Port settings:
+
+backend:
+ node runnning port : 3004
+trace export to opentelemetry collector : 4317
+trace export to opentelemetry collector protocol: gPRC
+
+

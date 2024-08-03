@@ -3,6 +3,7 @@ Opentelemetry demo app to verify  the trace application to opentelemetry colleco
 
 This app is only purpose of to test the connectivity or test traces in opentelemetry sdk's used in apllication send a trace to opentelemetry collector then export to tempo in grafana and visualize the traces.
 
+
 steps:
 
  cd backend/
@@ -16,6 +17,8 @@ steps:
  npm install
 
  npm start
+
+ 
 Port settings:
 
 backend:

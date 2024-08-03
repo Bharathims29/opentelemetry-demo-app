@@ -29,3 +29,8 @@ trace export to opentelemetry collector : 4317
 trace export to opentelemetry collector protocol: gPRC
 
 
+frontend:
+
+node running port :3000 or 3001
+
+Trace export to Backend to Frontend: 3004

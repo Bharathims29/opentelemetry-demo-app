@@ -1,32 +1,27 @@
+const express = require('express');
 const { tracer } = require('./server-tracer');
-const { traceResourceAllocation } = require('./resourceTracing');
+const router = express.Router();
 
-// Simple in-memory cache
-const cache = {};
+router.get('/read', (req, res) => {
+  const span = tracer.startSpan('cache_read');
+  const cacheHit = Math.random() > 0.5;
 
-// Function to trace cache access
-function traceCacheAccess(operation, key, hit) {
-  const span = tracer.startSpan(`cache_${operation}`);
-  span.setAttribute('cache.key', key);
-  span.setAttribute('cache.hit', hit);
-  traceResourceAllocation(span);
-  span.end();
-}
-
-function getCache(key) {
-  if (cache[key]) {
-    traceCacheAccess('read', key, true);
-    return { status: 200, value: cache[key] };
+  span.setAttribute('cache.hit', cacheHit);
+  if (cacheHit) {
+    span.addEvent('Cache hit');
   } else {
-    traceCacheAccess('read', key, false);
-    return { status: 404, value: 'Cache miss' };
+    span.addEvent('Cache miss');
   }
-}
 
-function setCache(key, value) {
-  cache[key] = value;
-  traceCacheAccess('write', key, true);
-  return { status: 200, value: 'Cache updated' };
-}
+  span.end();
+  res.send(`Cache read: ${cacheHit ? 'hit' : 'miss'}`);
+});
 
-module.exports = { getCache, setCache };
+router.post('/write', (req, res) => {
+  const span = tracer.startSpan('cache_write');
+  span.addEvent('Cache write operation');
+  span.end();
+  res.send('Cache write: success');
+});
+
+module.exports = router;

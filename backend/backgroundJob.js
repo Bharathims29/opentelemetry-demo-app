@@ -1,20 +1,16 @@
-const cron = require('node-cron');
 const { tracer } = require('./server-tracer');
-const { traceResourceAllocation } = require('./resourceTracing');
 
-// Schedule a background job to run every minute
-cron.schedule('* * * * *', () => {
-  const jobSpan = tracer.startSpan('background_job');
-  try {
-    console.log('Running a background job...');
-    // Simulate background job work
+const simulateBackgroundJob = () => {
+  const span = tracer.startSpan('background_job_execution');
+
+  setTimeout(() => {
+    span.addEvent('Background job started');
+    // Simulate job processing
     setTimeout(() => {
-      console.log('Background job completed.');
-      traceResourceAllocation(jobSpan);
-      jobSpan.end();
+      span.addEvent('Background job completed');
+      span.end();
     }, 1000);
-  } catch (error) {
-    jobSpan.recordException(error);
-    jobSpan.end();
-  }
-});
+  }, 500);
+};
+
+module.exports = { simulateBackgroundJob };

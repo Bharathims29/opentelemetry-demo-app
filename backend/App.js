@@ -4,12 +4,16 @@ const cors = require('cors');
 const { tracer, provider } = require('./server-tracer');
 const cacheRouter = require('./cache');
 const { simulateErrorHandling } = require('./errorHandling');
-const { simulateFork } = require('./forkProcess');
+//const { simulateFork } = require('./forkProcess');
+const { forkProcess } = require('./forkProcess');
 const { simulateBackgroundJob } = require('./backgroundJob');
 const { initializeApp } = require('./initialization');
 const { traceProcessLifecycle } = require('./lifecycle');
-const { traceResourceAllocation } = require('./resourceTracing');
+//const { traceResourceAllocation } = require('./resourceTracing');
+const { startResourceTracing } = require('./resourceTracing');
 const traceResponseTime = require('./responseTime');
+//const { requestCount } = require('./prometheus-metrics'); // Import the metrics
+//require('./prometheus-metrics'); // Ensure the metrics script is required to start exporting metrics
 
 // Initialize the application
 initializeApp();
@@ -49,7 +53,19 @@ app.use('/cache', cacheRouter);
 
 // Simulate various operations
 simulateErrorHandling();
-simulateFork();
+//simulateFork();
+
+// Endpoint to fork a child process and monitor its resource usage
+app.post('/fork-process', (req, res) => {
+  try {
+    const child = forkProcess();
+    res.status(200).send('Child process forked and monitored');
+  } catch (error) {
+    console.error('Error forking child process:', error);
+    res.status(500).send('Error forking child process');
+  }
+});
+
 simulateBackgroundJob();
 
 // Graceful shutdown
@@ -71,7 +87,8 @@ process.on('SIGINT', () => {
 traceProcessLifecycle();
 
 // Trace resource allocation
-traceResourceAllocation();
+//traceResourceAllocation();
+startResourceTracing(); 
 
 // Start the server
 app.listen(port, () => {
